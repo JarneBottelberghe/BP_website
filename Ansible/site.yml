@@ -1,0 +1,26 @@
+- name: Webserverconfig
+  hosts: localhost
+  roles: 
+    - cloudalchemy.node-exporter
+  become: true
+  tasks:
+  - name: install Apache
+    ansible.builtin.apt:
+      name: apache2
+      state: present
+
+  - name: enable Apache
+    ansible.builtin.service:
+      name: apache2
+      state: started
+      enabled: true
+
+  - name: copy webscript to webserver 
+    ansible.builtin.copy:
+      src: ./applicatie.html
+      dest: /var/www/html
+      mode: 0644
+  - name: Allow everything and enable UFW
+    community.general.ufw:
+      state: enabled
+      policy: allow    
